@@ -2,6 +2,7 @@ var gulp = require('gulp');
 var uglify = require('gulp-uglify');
 var minify = require('gulp-minify-css');
 var imagemin = require('gulp-imagemin');
+var shell = require('gulp-shell');
 
 var path = {
     js: 'js/*.js',
@@ -32,6 +33,8 @@ gulp.task('watch', () => {
     gulp.watch([path.js, path.css, path.img], ['script', 'css', 'img'])
 });
 
-gulp.task('pack', ['script', 'css', 'img', 'watch']);
+gulp.task('express', shell.task(['supervisor ../bin/www']))
+
+gulp.task('pack', ['script', 'css', 'img', 'watch', 'express']);
 
 gulp.task('default', ['pack']);
