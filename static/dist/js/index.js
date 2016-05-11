@@ -1,1 +1,0 @@
-require(["jquery"],function(){return window.abc=123,$.fn.hello=function(){console.log("hello")},console.log(9),function(o,n){return o+n}}),console.log("abc");
