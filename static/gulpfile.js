@@ -1,14 +1,16 @@
 var gulp = require('gulp');
 var uglify = require('gulp-uglify');
 var gUtil = require('gulp-util');
-var imagemin = require('gulp-imagemin');
+var sass = require('gulp-ruby-sass');
+var imagemin = require('gulp-imagemin')
 var shell = require('gulp-shell');
 var watchPath = require('gulp-watch-path');
 var combiner = require('stream-combiner2');
 
 var filePath = {
     js: './js/**/*.js',
-    img: './images/**/*',
+    scss: './sass/**/*.scss',
+    img: './images/**/*.*',
     font: './fonts/**/*'
 }
 
@@ -34,17 +36,18 @@ gulp.task('uglify', function(){
         .pipe(gulp.dest('dist/js'));
 });
 
-gulp.task('post', function(){
-    console.log('todo');
+gulp.task('scss', function(){
+    return sass(filePath.scss)
+        .on('error', handleError)
+        .pipe(gulp.dest('dist/css'));
 });
-
 gulp.task('image', function(){
     gulp.src(filePath.img)
-        .pipe(imagemin({
-            progressive: true
-        }))
-        .pipe(gulp.dest('dist/images'));
-});
+         .pipe(imagemin({
+             progressive: true
+         }))
+         .pipe(gulp.dest('dist/images'));
+ });
 
 gulp.task('copy', function(){
     gulp.src(filePath.font)
@@ -75,8 +78,8 @@ gulp.task('watchjs', function(){
     });
 });
 
-gulp.task('watchpost', function(){
-    console.log('todo');
+gulp.task('watchscss', function(){
+    gulp.watch(filePath.scss, ['scss']);
 });
 
 gulp.task('watchimage', function(){
@@ -95,7 +98,7 @@ gulp.task('watchimage', function(){
 });
 
 gulp.task('watchcopy', function(){
-    gulp.watch(filePath.fonts, function(event){
+    gulp.watch(filePath.font, function(event){
         var paths = watchPath(event);
 
         gulp.src(paths.srcPath)
@@ -107,7 +110,7 @@ gulp.task('watchcopy', function(){
 });
 
 gulp.task('express', shell.task(['supervisor ../bin/www']))
-gulp.task('start', ['uglify', 'post', 'image', 'copy']);
-gulp.task('watch', ['watchjs', 'watchpost', 'watchimage', 'watchcopy']);
+gulp.task('start', ['uglify', 'scss', 'image', 'copy']);
+gulp.task('watch', ['watchjs', 'watchscss', 'watchimage', 'watchcopy']);
 
 gulp.task('default', ['start', 'watch', 'express']);
