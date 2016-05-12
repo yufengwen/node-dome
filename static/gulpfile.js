@@ -113,4 +113,4 @@ gulp.task('express', shell.task(['supervisor ../bin/www']))
 gulp.task('start', ['uglify', 'scss', 'image', 'copy']);
 gulp.task('watch', ['watchjs', 'watchscss', 'watchimage', 'watchcopy']);
 
-gulp.task('default', ['start', 'watch', 'express']);
+gulp.task('default', ['start', 'watch']);
